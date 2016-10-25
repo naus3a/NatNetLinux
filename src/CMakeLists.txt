@@ -1,3 +1,13 @@
+SET( H_FILES
+   "CommandListener.h"
+   "FrameListener.h"
+   "FrameGetter.h"
+   "NatNet.h"
+   "NatNetPacket.h"
+   "NatNetSender.h"
+)
 
-ADD_EXECUTABLE( simple-example "SimpleExample.cpp" )
-TARGET_LINK_LIBRARIES( simple-example ${Boost_LIBRARIES} )
+INSTALL(
+   FILES ${H_FILES}
+   DESTINATION include/NatNetLinux
+)
