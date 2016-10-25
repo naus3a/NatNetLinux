@@ -1,6 +1,7 @@
 SET( H_FILES
    "CommandListener.h"
    "FrameListener.h"
+   "FrameGetter.h"
    "NatNet.h"
    "NatNetPacket.h"
    "NatNetSender.h"
