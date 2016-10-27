@@ -33,9 +33,11 @@
 #include <NatNetLinux/NatNet.h>
 #include <NatNetLinux/CommandListener.h>
 #include <NatNetLinux/FrameGetter.h>
+#include <NatNetLinux/FPSCounter.h>
 
 #include <boost/program_options.hpp>
 #include <time.h>
+
 
 class Globals
 {
@@ -44,9 +46,10 @@ public:
    // Parameters read from the command line
    static uint32_t localAddress;
    static uint32_t serverAddress;
-   
+    
    // State of the main() thread.
    static bool run;
+    
 };
 uint32_t Globals::localAddress = 0;
 uint32_t Globals::serverAddress = 0;
@@ -90,37 +93,38 @@ void readOpts( int argc, char* argv[] )
 
 void printFrames(FrameGetter & frameGetter){
     Globals::run = true;
+    FPSCounter fps;
     while (Globals::run) {
         FrameGetter::FrameResult fr = frameGetter.nextFrame();
         if(fr==FrameGetter::SUCCESS){
             std::cout<<frameGetter.getLastFrame()<<std::endl;
+            fps.update(frameGetter.getLastTimeStamp());
+            std::cout<<fps.getFps()<<" fps"<<std::endl;
         }
     }
 }
 
-// This thread loop just prints frames as they arrive.
-/*void printFrames(FrameListener& frameListener)
-{
-   bool valid;
-   MocapFrame frame;
-   Globals::run = true;
-   while(Globals::run)
-   {
-      while( true )
-      {
-         // Try to get a new frame from the listener.
-         MocapFrame frame(frameListener.pop(&valid).first);
-         // Quit if the listener has no more frames.
-         if( !valid )
-            break;
-         std::cout << frame << std::endl;
-      }
-      
-      // Sleep for a little while to simulate work :)
-      usleep(1000);
-   }
-}*/
-
+void testFps(){
+    Globals::run = true;
+    FPSCounter fps;
+    struct timespec lastTs;
+    while(Globals::run){
+#ifdef __MACH__
+        clock_serv_t cclock;
+        mach_timespec_t mts;
+        host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
+        clock_get_time(cclock, &mts);
+        mach_port_deallocate(mach_task_self(), cclock);
+        lastTs.tv_sec = mts.tv_sec;
+        lastTs.tv_nsec = mts.tv_nsec;
+#else
+        clock_gettime( CLOCK_MONOTONIC, &lastTs );
+#endif
+        usleep(1000000/30);
+        fps.update(lastTs);
+        std::cout<<fps.getFps()<<" fps"<<std::endl;
+    }
+}
 
 int main(int argc, char* argv[])
 {
@@ -159,20 +163,9 @@ int main(int argc, char* argv[])
 
     FrameGetter frameGetter(sdData, natNetMajor, natNetMinor);
     printFrames(frameGetter);
-   
-   // Start up a FrameListener in a new thread.
-   //FrameListener frameListener(sdData, natNetMajor, natNetMinor);
-   //frameListener.start();
-   
-   // This infinite loop simulates a "worker" thread that reads the frame
-   // buffer each time through, and exits when ctrl-c is pressed.
-   //printFrames(frameListener);
-   //timeStats(frameListener);
-   
-   // Wait for threads to finish.
-   //frameListener.stop();
+    //testFps();
+    
    commandListener.stop();
-   //frameListener.join();
    commandListener.join();
    
    // Epilogue

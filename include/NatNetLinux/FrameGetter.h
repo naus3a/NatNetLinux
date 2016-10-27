@@ -62,7 +62,7 @@ public:
         lastTs.tv_sec = mts.tv_sec;
         lastTs.tv_nsec = mts.tv_nsec;
 #else
-        clock_gettime( CLOCK_REALTIME, &lastTs );
+        clock_gettime( CLOCK_MONOTONIC, &lastTs );
 #endif
     }
     
