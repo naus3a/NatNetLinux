@@ -211,7 +211,15 @@ public:
         return (float *)&x;
     }
     
-    float & operator[]( int n ) const {
+    const float * getPtr() const {
+        return (const float *)&x;
+    }
+    
+    float & operator[]( int n ) {
+        return getPtr()[n];
+    }
+    
+    float operator[]( int n) const{
         return getPtr()[n];
     }
    
