@@ -51,6 +51,10 @@ public:
       _nnVersionMutex.lock();
    }
    
+    void setSocket(int sd){
+        _sd=sd;
+    }
+    
    ~CommandListener()
    {
       if( running() )

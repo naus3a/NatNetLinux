@@ -6,6 +6,7 @@ SET( H_FILES
    "NatNet.h"
    "NatNetPacket.h"
    "NatNetSender.h"
+   "NatNetClient.h"
 )
 
 INSTALL(

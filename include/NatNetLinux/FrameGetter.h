@@ -37,7 +37,17 @@ public:
         UNKNOWN
     };
     
-    FrameGetter(int sd = -1, unsigned char nnMajor=0, unsigned char nnMinor=0, size_t bufferSize=64) :
+    FrameGetter(){
+        toSec = 1;
+        bNewFrame=false;
+    }
+    
+    FrameGetter(int sd, unsigned char nnMajor, unsigned char nnMinor, size_t bufferSize=64){
+        FrameGetter();
+        set(sd, nnMajor, nnMinor, bufferSize);
+    }
+    
+    /*FrameGetter(int sd = -1, unsigned char nnMajor=0, unsigned char nnMinor=0, size_t bufferSize=64) :
     _sd(sd),
     _nnMajor(nnMajor),
     _nnMinor(nnMinor),
@@ -46,9 +56,16 @@ public:
     lastFrame(_nnMajor, _nnMinor)
     {
         
-    }
+    }*/
     
     ~FrameGetter(){}
+    
+    void set(int sd = -1, unsigned char nnMajor=0, unsigned char nnMinor=0, size_t bufferSize=64){
+        _sd = sd;
+        _nnMajor = nnMajor;
+        _nnMinor = nnMinor;
+        lastFrame = MocapFrame(_nnMajor, _nnMinor);
+    }
     
     bool isNewFrameReady(){return bNewFrame;}
     

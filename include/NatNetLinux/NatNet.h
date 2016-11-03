@@ -821,6 +821,7 @@ public:
       return *this;
    }
    
+    
    /*!
     * \brief Frame number.
     * 
