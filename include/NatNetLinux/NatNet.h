@@ -206,6 +206,14 @@ public:
       
       return *this;
    }
+    
+    float * getPtr(){
+        return (float *)&x;
+    }
+    
+    float & operator[]( int n ) const {
+        return getPtr()[n];
+    }
    
    float x;
    float y;
