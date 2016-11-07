@@ -45,8 +45,10 @@ void readOpts(int argc, char * argv[]){
 void update(NatNetClient & c){
     Globals::run = true;
     while(Globals::run){
+	
         c.update();
         if(c.isNewFrameReady()){
+std::cout<<"test"<<std::endl;
             std::cout<<c.getLastFrame()<<std::endl;
         }
         //FrameGetter::FrameResult fr = c.frameGetter.nextFrame();

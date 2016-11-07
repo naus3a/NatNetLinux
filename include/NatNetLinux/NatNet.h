@@ -206,6 +206,22 @@ public:
       
       return *this;
    }
+    
+    float * getPtr(){
+        return (float *)&x;
+    }
+    
+    const float * getPtr() const {
+        return (const float *)&x;
+    }
+    
+    float & operator[]( int n ) {
+        return getPtr()[n];
+    }
+    
+    float operator[]( int n) const{
+        return getPtr()[n];
+    }
    
    float x;
    float y;
@@ -1039,3 +1055,4 @@ std::ostream& operator<<(std::ostream& s, MocapFrame const& frame)
 }
 
 #endif /*NATNET_H*/
+

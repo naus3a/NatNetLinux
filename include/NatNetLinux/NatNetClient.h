@@ -77,7 +77,7 @@ public:
     }
     
     bool isNewFrameReady(){
-        return frameGetter.isNewFrameReady() && (lastFrameResult==FrameGetter::SUCCESS);
+	return (lastFrameResult==FrameGetter::SUCCESS);
     }
     
     bool isConnected(){return bConnected;}
