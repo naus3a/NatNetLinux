@@ -263,6 +263,18 @@ public:
    float qy;
    float qz;
    float qw;
+    
+    float getAxis(int aId){
+        if(aId==0){
+            return qx;
+        }else if(aId==1){
+            return qy;
+        }else if(aId==2){
+            return qz;
+        }else{
+            return 0;
+        }
+    }
    
    //! \brief Default constructor. Without parameters, returns the identity (no rotation).
    Quaternion4f( float qx=0.f, float qy=0.f, float qz=0.f, float qw=1.f ) :
@@ -972,6 +984,10 @@ public:
          }
       }
       
+      // TODO: add version check
+      int numForcePlates = 0;
+      memcpy(&numForcePlates,data,4); data += 4;
+
       // Get latency/timecode
       memcpy(&_latency,data,4); data += 4;
       
@@ -1055,4 +1071,3 @@ std::ostream& operator<<(std::ostream& s, MocapFrame const& frame)
 }
 
 #endif /*NATNET_H*/
-
