@@ -984,6 +984,10 @@ public:
          }
       }
       
+       // TODO: add version check
+       int numForcePlates = 0;
+       memcpy(&numForcePlates,data,4); data += 4;
+       
       // Get latency/timecode
       memcpy(&_latency,data,4); data += 4;
       
