@@ -32,6 +32,7 @@ public:
         localAddress=0;
         serverAddress=0;
         stringVersion="";
+	bGotTimeOut=false;
         lastFrameResult = FrameGetter::UNKNOWN;
     }
     ~NatNetClient(){
@@ -79,16 +80,21 @@ public:
 #ifdef USE_FPS
             fps.update(frameGetter.getLastTimeStamp());
 #ifdef PRINT_INFO
-            //std::cout<<fps.getFps()<<" fps / latency: "<<fps.getLatency()<<std::endl;
+            if(bGotTimeOut){
+            	std::cout<<"NatNet reconnected after "<<fps.getLatency()<<" sec"<<std::endl;
+		bGotTimeOut=false;
+            }
+
 #endif
 #endif
         }
 #ifdef PRINT_INFO
         else{
             if(lastFrameResult == FrameGetter::TIMEOUT){
-               std::cout<<"FRAME TIMEOUT"<<std::endl;
+               std::cout<<"NATNET FRAME TIMEOUT"<<std::endl;
+		bGotTimeOut=true;
             }else{
-               std::cout<<"FRAME LOST"<<std::endl;
+               std::cout<<"NATNET FRAME LOST: bad data"<<std::endl;
             }
         }
 #endif
@@ -125,6 +131,7 @@ public:
 private:
 #ifdef USE_FPS
     FPSCounter fps;
+    bool bGotTimeOut;
 #endif
     CommandListener commandListener;
     NatNetPacket ping;
