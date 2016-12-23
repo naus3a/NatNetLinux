@@ -38,12 +38,12 @@ public:
     };
     
     FrameGetter(){
-        toSec = 1;
         bNewFrame=false;
     }
     
     FrameGetter(int sd, unsigned char nnMajor, unsigned char nnMinor, size_t bufferSize=64){
         FrameGetter();
+        setTimout(500);
         set(sd, nnMajor, nnMinor, bufferSize);
     }
     
@@ -59,6 +59,11 @@ public:
     }*/
     
     ~FrameGetter(){}
+    
+    void setTimout(int millis){
+        timeout.tv_sec =1;
+        timeout.tv_usec=millis*1000;
+    }
     
     void set(int sd = -1, unsigned char nnMajor=0, unsigned char nnMinor=0, size_t bufferSize=64){
         _sd = sd;
@@ -85,9 +90,6 @@ public:
     
     FrameResult nextFrame(){
         FrameResult fr = FrameGetter::UNKNOWN;
-        
-        timeout.tv_sec =1;
-        timeout.tv_usec=0;
         
         FD_ZERO(&rfds);
         FD_SET(_sd, &rfds);
@@ -125,7 +127,6 @@ public:
         return std::make_pair(getLastFrame(), getLastTimeStamp());
     }
     
-    int toSec; //seconds until timeout
 private:
     
     MocapFrame lastFrame; //last MocapFrame

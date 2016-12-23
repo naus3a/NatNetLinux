@@ -39,7 +39,9 @@ public:
         if(b1stFrame){
             uint64_t tDiff = BILLION * (newTs.tv_sec - oldTs.tv_sec) +
                                         newTs.tv_nsec - oldTs.tv_nsec;
-            lastFps = BILLION/(double)tDiff;
+            latency = (double)tDiff/BILLION;
+            lastFps = 1.0/latency;
+            
         }
         oldTs = newTs;
         b1stFrame = true;
@@ -48,8 +50,12 @@ public:
     double getFps(){
         return lastFps;
     }
+    double getLatency(){
+        return latency;
+    }
 private:
     double lastFps;
+    double latency;
     struct timespec oldTs;
     bool b1stFrame;
 };

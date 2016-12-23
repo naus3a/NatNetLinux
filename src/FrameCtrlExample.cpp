@@ -99,7 +99,7 @@ void printFrames(FrameGetter & frameGetter){
         if(fr==FrameGetter::SUCCESS){
             std::cout<<frameGetter.getLastFrame()<<std::endl;
             fps.update(frameGetter.getLastTimeStamp());
-            std::cout<<fps.getFps()<<" fps"<<std::endl;
+            std::cout<<fps.getFps()<<" fps / latency: "<<fps.getLatency()<<std::endl;
         }
     }
 }
@@ -122,7 +122,7 @@ void testFps(){
 #endif
         usleep(1000000/30);
         fps.update(lastTs);
-        std::cout<<fps.getFps()<<" fps"<<std::endl;
+        std::cout<<fps.getFps()<<" fps / latency: "<<fps.getLatency()<<std::endl;
     }
 }
 

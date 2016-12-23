@@ -22,6 +22,9 @@
 #include <boost/program_options.hpp>
 #include <time.h>
 
+#define USE_FPS
+#define PRINT_INFO
+
 class NatNetClient{
 public:
     NatNetClient(){
@@ -73,7 +76,18 @@ public:
         lastFrameResult = frameGetter.nextFrame();
         if(lastFrameResult==FrameGetter::SUCCESS){
             lastFrame = frameGetter.getLastFrame();
+#ifdef USE_FPS
+            fps.update(frameGetter.getLastTimeStamp());
+#ifdef PRINT_INFO
+            std::cout<<fps.getFps()<<" fps / latency: "<<fps.getLatency()<<std::endl;
+#endif
+#endif
         }
+#ifdef PRINT_INFO
+        else{
+            std::cout<<"FRAME LOST"<<std::endl;
+        }
+#endif
     }
     
     bool isNewFrameReady(){
@@ -100,7 +114,13 @@ public:
         return stringVersion;
     }
     
+#ifdef USE_FPS
+    double getFps(){return fps.getFps();}
+#endif
 private:
+#ifdef USE_FPS
+    FPSCounter fps;
+#endif
     CommandListener commandListener;
     NatNetPacket ping;
     FrameGetter frameGetter;
