@@ -39,11 +39,12 @@ public:
     
     FrameGetter(){
         bNewFrame=false;
+        timeOutMillis=10;
     }
     
     FrameGetter(int sd, unsigned char nnMajor, unsigned char nnMinor, size_t bufferSize=64){
         FrameGetter();
-        setTimout(500);
+        timeOutMillis=10;
         set(sd, nnMajor, nnMinor, bufferSize);
     }
     
@@ -60,10 +61,6 @@ public:
     
     ~FrameGetter(){}
     
-    void setTimout(int millis){
-        timeout.tv_sec =1;
-        timeout.tv_usec=millis*1000;
-    }
     
     void set(int sd = -1, unsigned char nnMajor=0, unsigned char nnMinor=0, size_t bufferSize=64){
         _sd = sd;
@@ -90,6 +87,9 @@ public:
     
     FrameResult nextFrame(){
         FrameResult fr = FrameGetter::UNKNOWN;
+        
+        timeout.tv_sec =0;
+        timeout.tv_usec=timeOutMillis*1000;
         
         FD_ZERO(&rfds);
         FD_SET(_sd, &rfds);
@@ -136,6 +136,7 @@ private:
     fd_set rfds;
     size_t dataBytes;
     int _sd;
+    int timeOutMillis;
     unsigned char _nnMajor;
     unsigned char _nnMinor;
     bool bNewFrame;
